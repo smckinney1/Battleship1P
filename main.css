@@ -2,10 +2,43 @@ body {
 	background: #000;
 }
 
+/****** GAME BOARD *******/
+
+/* Give board relative positioning so that elements within can be positioned relative to it (see #message-area, table, form styling) */
 div#board {
 	position: relative;
 	width: 1024px;
 	height: 863px;
 	margin: auto;
 	background:url(images/board.jpg) no-repeat;
+}
+
+table {
+	position: absolute;
+	left: 173px;
+	top: 98px;
+	border-spacing: 0px;
+}
+
+td {
+	width: 94px;
+	height: 94px;
+}
+
+/****** FORMS AND MESSAGES *******/
+
+div#message-area {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	color: rgb(83, 175, 19);
+}
+
+form {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	padding: 15px;
+	background-color: rgb(83, 175, 19);
+	font-size: 1em;
 }
