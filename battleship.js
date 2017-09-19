@@ -107,7 +107,19 @@ var controller = {
 		return null;
 	},
 	processGuess: function (guess) {
-		//code here
+		var location = this.parseGuess(guess);
+
+		//ensures we don't get null back, then increases the number of guesses and fires
+		if (location) {
+			this.guesses++;
+
+			//returns true or false
+			var hit = model.fire(location);
+
+			if (hit && model.shipsSunk === model.numShips) {
+				view.displayMessage("You sank all my battleships in " + this.guesses + " guesses!");
+			}
+		}
 	}
 };
 
