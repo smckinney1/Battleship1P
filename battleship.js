@@ -43,7 +43,6 @@ var model = {
 		//fire on a ship and figure out if hit or miss
 		//using this.numShips for scalability later (instead of hard-coding i < 3)
 		//iterating through the ships, examining one ship at a time.
-		debugger;
 		for (var i = 0; i < this.numShips; i++) {
 			var ship = this.ships[i];
 
@@ -52,28 +51,28 @@ var model = {
 
 			if (index >= 0) {
 				//Ship is hit
-				ship.hits[index] = "hit";
+				ship.hits[index] = 'hit';
 				view.displayHit(guess);
-				view.displayMessage("HIT!");
+				view.displayMessage('HIT!');
 
 				//call the isSunk method using the ship to find out if it's sunk
 				if (this.isSunk(ship)) {
 					this.shipsSunk++;
-					view.displayMessage("You sank my battleship!");
+					view.displayMessage('You sank my battleship!');
 				}
 				return true;
 			}
 		}
 		//return false if not a hit (index = -1) & display a miss
 		view.displayMiss(guess);
-		view.displayMessage("You missed.");
+		view.displayMessage('You missed.');
 		return false;
 	},
 	isSunk: function (ship) {
-		//take a particular ship and search each value of its "hits" array.
-		//then, if any of those values is not equal to "hit," return false: the ship isn't sunk.
+		//take a particular ship and search each value of its 'hits' array.
+		//then, if any of those values is not equal to 'hit,' return false: the ship isn't sunk.
 		for (var i = 0; i < this.shipsLength; i++) {
-			if (ship.hits[i] !== "hit") {
+			if (ship.hits[i] !== 'hit') {
 				return false;
 			}
 		}
@@ -85,13 +84,13 @@ var controller = {
 	guesses: 0,
 	parseGuess: function (guess) {
 		//Processes the guesses and passes them to the model. Detects the end of the game.
-		var alphabet = ["A", "B", "C", "D", "E", "F", "G"];
-		var alertError = "Please enter a letter and a number on the board between A" + (model.boardSize - 1) + " and " + alphabet[alphabet.length - 1] + (model.boardSize - 1);
+		var alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+		var alertError = 'Please enter a letter and a number on the board between A' + (model.boardSize - 1) + ' and ' + alphabet[alphabet.length - 1] + (model.boardSize - 1);
 
 		if (guess === null || guess.length !== 2) {
 			alert(alertError);
 		} else {
-			//Get the first character of the guess, then assign var "row" to that index of the alphabet array
+			//Get the first character of the guess, then assign var 'row' to that index of the alphabet array
 			//change to uppercase to ensure lower-case input is accepted
 			var firstChar = guess.charAt(0);
 			firstChar = firstChar.toUpperCase();
@@ -121,16 +120,40 @@ var controller = {
 			var hit = model.fire(location);
 
 			if (hit && model.shipsSunk === model.numShips) {
-				view.displayMessage("You sank all my battleships in " + this.guesses + " guesses!");
+				view.displayMessage('You sank all my battleships in ' + this.guesses + ' guesses!');
 			}
 		}
 	}
 };
 
+//Event handlers
+
+function init () {
+	var fireButton = document.getElementById('fire-button');
+	fireButton.onclick = handleFireButton;
+}
+
+function handleFireButton () {
+	//get value from form
+	var guessInput = document.getElementById('guess-input');
+	var guess = guessInput.value;
+
+	//submit guess to the controller for processing
+	controller.processGuess(guess);
+
+	//reset the guess after submission
+	guessInput.value = '';
+}
+
+window.onload = init;
+
+
 
 /**NOTES FOR LATER**/
 
 /*********************************************************
+
+~~~Prevent user from firing if model.shipsSunk === model.numShips~~~
 
 Converting the guess to numeric form:
 
@@ -152,21 +175,21 @@ var alphabet = {
 	G: 6
 }
 
-var guess = "A3";
+var guess = 'A3';
 var guessSplit = guess.split('');
 
 if (alphabet.hasOwnProperty(guessSplit[0])) {
 	guessSplit[0] = alphabet[guessSplit[0]];
 	console.log(guessSplit[0]);
 } else {
-	//view.displayMessage("Your guess is invalid. Try again.");
+	//view.displayMessage('Your guess is invalid. Try again.');
 	return false;
 }
 
 guess = guessSplit.join('');
 
 if (guess < 0 || guess > 66) {
-	//view.displayMessage("Your guess is invalid. Try again.");
+	//view.displayMessage('Your guess is invalid. Try again.');
 	return false;
 }
 
