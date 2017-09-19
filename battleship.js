@@ -79,6 +79,93 @@ var model = {
 	}
 };
 
+var controller = {
+	guesses: 0,
+	parseGuess: function (guess) {
+		//Processes the guesses and passes them to the model. Detects the end of the game.
+		var alphabet = ["A", "B", "C", "D", "E", "F", "G"];
+		var alertError = "Please enter a letter and a number on the board between A" + (model.boardSize - 1) + " and " + alphabet[alphabet.length - 1] + (model.boardSize - 1);
+
+		if (guess === null || guess.length !== 2) {
+			alert(alertError);
+		} else {
+			//Get the first character of the guess, then assign var "row" to that index of the alphabet array
+			var firstChar = guess.charAt(0);
+			var row = alphabet.indexOf(firstChar);
+			var column = guess.charAt(1);
+
+			//validating user input
+			if (isNaN(row) || isNaN(column)) {
+				alert(alertError);
+			} else if (row < 0 || row >= model.boardSize || column < 0 || column >= model.boardSize) {
+				alert(alertError);
+			} else {
+				return row + column;
+			}
+		}
+		//return null if input not valid
+		return null;
+	},
+	processGuess: function (guess) {
+		//code here
+	}
+};
+
+
+/**NOTES FOR LATER**/
+
+/*********************************************************
+
+Converting the guess to numeric form:
+
+(1) Assume we've been handed a string in alphanumeric form
+(2) Separate the string's two letters
+(3a) The second character in the string should be converted to a number and ensure it's between 0 and 6
+(3b) The first character in the string should be converted to a number and ensure it is between 0 and 6
+(4) Put the two numbers back together into a string.
+
+Possibly a better method than using an array for the alphabet:
+
+var alphabet = {
+	A: 0,
+	B: 1,
+	C: 2,
+	D: 3,
+	E: 4,
+	F: 5,
+	G: 6
+}
+
+var guess = "A3";
+var guessSplit = guess.split('');
+
+if (alphabet.hasOwnProperty(guessSplit[0])) {
+	guessSplit[0] = alphabet[guessSplit[0]];
+	console.log(guessSplit[0]);
+} else {
+	//view.displayMessage("Your guess is invalid. Try again.");
+	return false;
+}
+
+guess = guessSplit.join('');
+
+if (guess < 0 || guess > 66) {
+	//view.displayMessage("Your guess is invalid. Try again.");
+	return false;
+}
+
+*********************************************************/
+
+
+
+
+
+
+
+
+
+
+
 
 
 
