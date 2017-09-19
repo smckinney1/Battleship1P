@@ -43,11 +43,13 @@ var model = {
 		//fire on a ship and figure out if hit or miss
 		//using this.numShips for scalability later (instead of hard-coding i < 3)
 		//iterating through the ships, examining one ship at a time.
+		debugger;
 		for (var i = 0; i < this.numShips; i++) {
 			var ship = this.ships[i];
 
 			//The indexOf() method returns the first index at which a given element can be found in the array, or -1 if it is not present.
 			var index = ship.locations.indexOf(guess);
+
 			if (index >= 0) {
 				//Ship is hit
 				ship.hits[index] = "hit";
@@ -61,11 +63,11 @@ var model = {
 				}
 				return true;
 			}
-			//return false if not a hit (index = -1) & display a miss
-			view.displayMiss(guess);
-			view.displayMessage("You missed.");
-			return false;
 		}
+		//return false if not a hit (index = -1) & display a miss
+		view.displayMiss(guess);
+		view.displayMessage("You missed.");
+		return false;
 	},
 	isSunk: function (ship) {
 		//take a particular ship and search each value of its "hits" array.
@@ -90,7 +92,9 @@ var controller = {
 			alert(alertError);
 		} else {
 			//Get the first character of the guess, then assign var "row" to that index of the alphabet array
+			//change to uppercase to ensure lower-case input is accepted
 			var firstChar = guess.charAt(0);
+			firstChar = firstChar.toUpperCase();
 			var row = alphabet.indexOf(firstChar);
 			var column = guess.charAt(1);
 
