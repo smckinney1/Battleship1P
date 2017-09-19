@@ -43,20 +43,39 @@ var model = {
 		//fire on a ship and figure out if hit or miss
 		//using this.numShips for scalability later (instead of hard-coding i < 3)
 		//iterating through the ships, examining one ship at a time.
-		for (var i = 0; i < this.numShips, i++) {
+		for (var i = 0; i < this.numShips; i++) {
 			var ship = this.ships[i];
-			var locations = ship.locations;
 
 			//The indexOf() method returns the first index at which a given element can be found in the array, or -1 if it is not present.
-			var index = locations.indexOf(guess);
+			var index = ship.locations.indexOf(guess);
 			if (index >= 0) {
 				//Ship is hit
 				ship.hits[index] = "hit";
+				view.displayHit(guess);
+				view.displayMessage("HIT!");
+
+				//call the isSunk method using the ship to find out if it's sunk
+				if (this.isSunk(ship)) {
+					this.shipsSunk++;
+					view.displayMessage("You sank my battleship!");
+				}
 				return true;
 			}
-			//return false if not a hit (index = -1)
+			//return false if not a hit (index = -1) & display a miss
+			view.displayMiss(guess);
+			view.displayMessage("You missed.");
 			return false;
 		}
+	},
+	isSunk: function (ship) {
+		//take a particular ship and search each value of its "hits" array.
+		//then, if any of those values is not equal to "hit," return false: the ship isn't sunk.
+		for (var i = 0; i < this.shipsLength; i++) {
+			if (ship.hits[i] !== "hit") {
+				return false;
+			}
+		}
+		return true;
 	}
 };
 
