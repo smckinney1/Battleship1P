@@ -139,7 +139,7 @@ var model = {
 	isSunk: function (ship) {
 		//take a particular ship and search each value of its 'hits' array.
 		//then, if any of those values is not equal to 'hit,' return false: the ship isn't sunk.
-		for (var i = 0; i < this.shipsLength; i++) {
+		for (var i = 0; i < this.shipLength; i++) {
 			if (ship.hits[i] !== 'hit') {
 				return false;
 			}
@@ -179,6 +179,7 @@ var controller = {
 	},
 	processGuess: function (guess) {
 		var location = this.parseGuess(guess);
+		console.log('Ships sunk: ' + model.shipsSunk);
 
 		//ensures we don't get null back, then increases the number of guesses and fires
 		if (location) {
