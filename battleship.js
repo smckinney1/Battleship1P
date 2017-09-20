@@ -23,22 +23,80 @@ var view = {
 var model = {
 	boardSize: 7,
 	numShips: 3,
-	shipsLength: 3,
+	shipLength: 3,
 	shipsSunk: 0,
 	ships: [
 		{
-			locations: ['06', '16', '26'],
+			locations: [0, 0, 0],
 			hits: ['', '', '']
 		}, 
 		{
-			locations: ['24', '34', '44'],
+			locations: [0, 0, 0],
 			hits: ['', '', '']
 		}, 
 		{
-			locations: ['10', '11', '12'],
-			hits: ['', '', 'hit']
+			locations: [0, 0, 0],
+			hits: ['', '', '']
 		}
 	],
+	collision: function () {
+		//takes a single ship
+		//makes sure it doesn't overlap with a ship already on the board
+	},
+	generateShip: function () {
+		//creates a single ship, somewhere on the board
+		//locations may or may not overlap with other ships
+
+		//result will be 0 or 1
+		var direction = Math.floor(Math.random() * 2);
+		var row;
+		var col;
+		var newShipLocations = [];
+
+		//Generate starting cell on board
+		//direction = 1: horizontal; direction = 0: vertical
+		if (direction === 1) {
+			//Generate starting location for horizontal ship
+			row = Math.floor(Math.random() * this.boardSize);
+			//since the ship is horizontal, we need to leave room for the rest of the ship
+			//starting column must be between 0 - 4 (if higher it will go off the board)
+			col = Math.floor(Math.random() * ((this.boardSize - this.shipLength) + 1));
+		} else {
+			//Generate vertical location
+			//this time row needs to be a random location between 0 and 4 to leave room for the ship
+			row = Math.floor(Math.random() * ((this.boardSize - this.shipLength) + 1));
+			col = Math.floor(Math.random() * this.boardSize);
+
+		}
+
+		//Generate the rest of the cells
+		for (var i = 0; i < this.shipLength; i++) {
+			if (direction === 1) {
+				//add location to array for new horizontal ship
+				//ensure that "i" is added to var col before it's converted to a string
+				//quote marks ensure that the output is accomplished through string concatenation and not addition
+				newShipLocations.push(row + '' + (col + i));
+			} else {
+				//add location to array for new vertical ship
+				newShipLocations.push((row + i) + '' + col);
+			}
+		}
+
+		return newShipLocations;
+
+	},
+	generateShipLocations: function () {
+		//master method
+		//creates a ships array in the model, with the number of ships in model.numShips property
+		//each time it generates a new ship, uses the collision method to make sure no overlaps
+		var locations;
+		for (var i = 0; i < this.numShips; i++) {
+			do {
+				locations = this.generateShip();
+			} while (this.collision(locations));
+			this.ships[i].locations = locations;
+		}
+	},
 	fire: function (guess) {
 		//fire on a ship and figure out if hit or miss
 		//using this.numShips for scalability later (instead of hard-coding i < 3)
@@ -165,44 +223,7 @@ window.onload = init;
 /*********************************************************
 
 ~~~Prevent user from firing if model.shipsSunk === model.numShips~~~
-
-Converting the guess to numeric form:
-
-(1) Assume we've been handed a string in alphanumeric form
-(2) Separate the string's two letters
-(3a) The second character in the string should be converted to a number and ensure it's between 0 and 6
-(3b) The first character in the string should be converted to a number and ensure it is between 0 and 6
-(4) Put the two numbers back together into a string.
-
-Possibly a better method than using an array for the alphabet:
-
-var alphabet = {
-	A: 0,
-	B: 1,
-	C: 2,
-	D: 3,
-	E: 4,
-	F: 5,
-	G: 6
-}
-
-var guess = 'A3';
-var guessSplit = guess.split('');
-
-if (alphabet.hasOwnProperty(guessSplit[0])) {
-	guessSplit[0] = alphabet[guessSplit[0]];
-	console.log(guessSplit[0]);
-} else {
-	//view.displayMessage('Your guess is invalid. Try again.');
-	return false;
-}
-
-guess = guessSplit.join('');
-
-if (guess < 0 || guess > 66) {
-	//view.displayMessage('Your guess is invalid. Try again.');
-	return false;
-}
+~~~Don't allow the same guess more than once~~~
 
 *********************************************************/
 
