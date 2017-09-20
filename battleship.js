@@ -39,9 +39,19 @@ var model = {
 			hits: ['', '', '']
 		}
 	],
-	collision: function () {
+	collision: function (locations) {
 		//takes a single ship
 		//makes sure it doesn't overlap with a ship already on the board
+		for (var i = 0; i < this.numShips; i++) {
+			var ship = this.ships[i];
+			for (var j = 0; j < locations.length; j++) {
+				//check to see if any of the locations in the new ship's locations array is in an existing ship location's array
+				if (ship.locations.indexOf(locations[j]) >= 0) {
+					return true;
+				}
+			}
+		}
+		return false;
 	},
 	generateShip: function () {
 		//creates a single ship, somewhere on the board
@@ -191,6 +201,7 @@ function init () {
 	fireButton.onclick = handleFireButton;
 	var guessInput = document.getElementById('guess-input');
 	guessInput.onkeypress = handleKeyPress;
+	model.generateShipLocations();
 }
 
 function handleFireButton () {
@@ -224,6 +235,7 @@ window.onload = init;
 
 ~~~Prevent user from firing if model.shipsSunk === model.numShips~~~
 ~~~Don't allow the same guess more than once~~~
+~~~Bug: It tells you that you sank all its battleships after you sink the first ship.~~~
 
 *********************************************************/
 
